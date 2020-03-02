@@ -139,7 +139,7 @@ zookeeperMetadata:
 ##
 bookkeeper:
   component: bookkeeper
-  replicaCount: 0
+  replicaCount: 3
   updateStrategy:
     type: OnDelete
   podManagementPolicy: OrderedReady
@@ -198,6 +198,12 @@ bookkeeper:
   ## templates/bookkeeper-service.yaml
   ##
   service:
+    annotations:
+      publishNotReadyAddresses: "true"
+    ports:
+    - name: server
+      port: 3181
+  headlessService:
     annotations:
       publishNotReadyAddresses: "true"
     ports:

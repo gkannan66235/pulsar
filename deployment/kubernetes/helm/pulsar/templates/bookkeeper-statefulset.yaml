@@ -30,7 +30,7 @@ metadata:
     component: {{ .Values.bookkeeper.component }}
     cluster: {{ template "pulsar.fullname" . }}
 spec:
-  serviceName: "{{ template "pulsar.fullname" . }}-{{ .Values.bookkeeper.component }}"
+  serviceName: "{{ template "pulsar.fullname" . }}-{{ .Values.bookkeeper.component }}-headless"
   replicas: {{ .Values.bookkeeper.replicaCount }}
   selector:
     matchLabels:
