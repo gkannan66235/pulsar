@@ -70,6 +70,8 @@ zookeeper:
   annotations:
     prometheus.io/scrape: "true"
     prometheus.io/port: "8000"
+    traffic.sidecar.istio.io/excludeInboundPorts: "2888,3888"
+    traffic.sidecar.istio.io/excludeOutboundPorts: "2888,3888"
   tolarations: []
   gracePeriod: 0
   resources:

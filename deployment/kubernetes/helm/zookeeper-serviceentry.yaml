@@ -1,0 +1,55 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: pulsaristio-zookeeper-0
+  namespace: pulsaristio
+spec:
+  hosts:
+  - pulsaristio-zookeeper-0.pulsaristio-zookeeper-headless.pulsaristio.svc.cluster.local
+  location: MESH_INTERNAL
+  ports:
+  - name: server
+    number: 2888
+    protocol: TCP
+  - name: leader-election
+    number: 3888
+    protocol: TCP
+  resolution: DNS
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: pulsaristio-zookeeper-1
+  namespace: pulsaristio
+spec:
+  hosts:
+  - pulsaristio-zookeeper-1.pulsaristio-zookeeper-headless.pulsaristio.svc.cluster.local
+  location: MESH_INTERNAL
+  ports:
+  - name: server
+    number: 2888
+    protocol: TCP
+  - name: leader-election
+    number: 3888
+    protocol: TCP
+  resolution: DNS
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: pulsaristio-zookeeper-2
+  namespace: pulsaristio
+spec:
+  hosts:
+  - pulsaristio-zookeeper-2.pulsaristio-zookeeper-headless.pulsaristio.svc.cluster.local
+  location: MESH_INTERNAL
+  ports:
+  - name: server
+    number: 2888
+    protocol: TCP
+  - name: leader-election
+    number: 3888
+    protocol: TCP
+  resolution: DNS
