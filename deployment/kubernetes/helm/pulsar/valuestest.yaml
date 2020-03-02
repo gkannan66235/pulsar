@@ -36,19 +36,19 @@ prometheus_rbac: yes
 ## which extra components to deploy
 extra:
   # Pulsar proxy
-  proxy: yes
+  proxy: no
   # Bookkeeper auto-recovery
-  autoRecovery: yes
+  autoRecovery: no
   # Pulsar dashboard
   # Deprecated
   # Replace pulsar-dashboard with pulsar-manager
   dashboard: no
   # pulsar manager
-  pulsar_manager: yes
+  pulsar_manager: no
   # Bastion pod for administrative commands
-  bastion: yes
+  bastion: no
   # Monitoring stack (prometheus and grafana)
-  monitoring: yes
+  monitoring: no
 
 ## Which pulsar image to use
 image:
@@ -74,12 +74,12 @@ zookeeper:
   gracePeriod: 0
   resources:
     requests:
-      memory: 15Gi
-      cpu: 4
+      memory: 5Gi
+      cpu: 1
   volumes:
     data:
       name: data
-      size: 20Gi
+      size: 2Gi
       ## If you already have an existent storage class and want to reuse it, you can specify its name with the option below
       ##
       # storageClassName: existent-storage-class
@@ -95,7 +95,7 @@ zookeeper:
   ## templates/zookeeper-configmap.yaml
   ##
   configData:
-    PULSAR_MEM: "\"-Xms15g -Xmx15g -Dcom.sun.management.jmxremote -Djute.maxbuffer=10485760 -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:+DisableExplicitGC -XX:+PerfDisableSharedMem -Dzookeeper.forceSync=no\""
+    PULSAR_MEM: "\"-Xms5g -Xmx5g -Dcom.sun.management.jmxremote -Djute.maxbuffer=10485760 -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:+DisableExplicitGC -XX:+PerfDisableSharedMem -Dzookeeper.forceSync=no\""
     PULSAR_GC: "\"-XX:+UseG1GC -XX:MaxGCPauseMillis=10\""
   ## Zookeeper service
   ## templates/zookeeper-service.yaml
@@ -131,7 +131,7 @@ zookeeperMetadata:
 ##
 bookkeeper:
   component: bookkeeper
-  replicaCount: 4
+  replicaCount: 3
   updateStrategy:
     type: OnDelete
   podManagementPolicy: OrderedReady
@@ -144,12 +144,12 @@ bookkeeper:
   gracePeriod: 0
   resources:
     requests:
-      memory: 15Gi
-      cpu: 4
+      memory: 5Gi
+      cpu: 1
   volumes:
     journal:
       name: journal
-      size: 50Gi
+      size: 5Gi
       ## If you already have an existent storage class and want to reuse it, you can specify its name with the option below
       ##
       # storageClassName: existent-storage-class
@@ -163,7 +163,7 @@ bookkeeper:
         # provisioner: kubernetes.io/gce-pd
     ledgers:
       name: ledgers
-      size: 50Gi
+      size: 5Gi
       ## If you already have an existent storage class and want to reuse it, you can specify its name with the option below
       ##
       # storageClassName: existent-storage-class
@@ -179,7 +179,7 @@ bookkeeper:
   ## templates/bookkeeper-configmap.yaml
   ##
   configData:
-    PULSAR_MEM: "\"-Xms15g -Xmx15g -XX:MaxDirectMemorySize=15g -Dio.netty.leakDetectionLevel=disabled -Dio.netty.recycler.linkCapacity=1024 -XX:+UseG1GC -XX:MaxGCPauseMillis=10 -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:ParallelGCThreads=32 -XX:ConcGCThreads=32 -XX:G1NewSizePercent=50 -XX:+DisableExplicitGC -XX:-ResizePLAB -XX:+ExitOnOutOfMemoryError -XX:+PerfDisableSharedMem -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCApplicationStoppedTime -XX:+PrintHeapAtGC -verbosegc -XX:G1LogLevel=finest\""
+    PULSAR_MEM: "\"-Xms5g -Xmx5g -XX:MaxDirectMemorySize=5g -Dio.netty.leakDetectionLevel=disabled -Dio.netty.recycler.linkCapacity=1024 -XX:+UseG1GC -XX:MaxGCPauseMillis=10 -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:ParallelGCThreads=32 -XX:ConcGCThreads=32 -XX:G1NewSizePercent=50 -XX:+DisableExplicitGC -XX:-ResizePLAB -XX:+ExitOnOutOfMemoryError -XX:+PerfDisableSharedMem -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCApplicationStoppedTime -XX:+PrintHeapAtGC -verbosegc -XX:G1LogLevel=finest\""
     PULSAR_PREFIX_dbStorage_writeCacheMaxSizeMb: "2048"
     PULSAR_PREFIX_dbStorage_readAheadCacheMaxSizeMb: "2048"
     PULSAR_PREFIX_dbStorage_rocksDB_blockCacheSize: "268435456"
@@ -207,7 +207,7 @@ bookkeeper:
 ##
 broker:
   component: broker
-  replicaCount: 3
+  replicaCount: 0
   # nodeSelector:
     # cloud.google.com/gke-nodepool: default-pool
   annotations:
@@ -252,7 +252,7 @@ broker:
 ##
 proxy:
   component: proxy
-  replicaCount: 3
+  replicaCount: 0
   # nodeSelector:
     # cloud.google.com/gke-nodepool: default-pool
   annotations:
@@ -318,7 +318,7 @@ autoRecovery:
 ##
 dashboard:
   component: dashboard
-  replicaCount: 1
+  replicaCount: 0
   # nodeSelector:
     # cloud.google.com/gke-nodepool: default-pool
   annotations: {}
@@ -360,7 +360,7 @@ dashboard:
 ##
 bastion:
   component: bastion
-  replicaCount: 1
+  replicaCount: 0
   # nodeSelector:
     # cloud.google.com/gke-nodepool: default-pool
   annotations: {}
@@ -381,7 +381,7 @@ bastion:
 ##
 prometheus:
   component: prometheus
-  replicaCount: 1
+  replicaCount: 0
   # nodeSelector:
     # cloud.google.com/gke-nodepool: default-pool
   annotations: {}
@@ -424,7 +424,7 @@ prometheus:
 ##
 grafana:
   component: grafana
-  replicaCount: 1
+  replicaCount: 0
   # nodeSelector:
     # cloud.google.com/gke-nodepool: default-pool
   annotations: {}
