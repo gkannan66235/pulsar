@@ -77,27 +77,27 @@ spec:
       initContainers:
       # This init container will wait for zookeeper to be ready before
       # deploying the bookies
-      - name: wait-zookeeper-ready
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        command: ["sh", "-c"]
-        args:
-          - >-
-            until bin/pulsar zookeeper-shell -server {{ template "pulsar.fullname" . }}-{{ .Values.zookeeper.component }} ls /admin/clusters/{{ template "pulsar.fullname" . }}; do
-              sleep 3;
-            done;
+      # - name: wait-zookeeper-ready
+      #   image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+      #   imagePullPolicy: {{ .Values.image.pullPolicy }}
+      #   command: ["sh", "-c"]
+      #   args:
+      #     - >-
+      #       until bin/pulsar zookeeper-shell -server {{ template "pulsar.fullname" . }}-{{ .Values.zookeeper.component }} ls /admin/clusters/{{ template "pulsar.fullname" . }}; do
+      #         sleep 3;
+      #       done;
       # This init container will wait for bookkeeper to be ready before
       # deploying the broker
-      - name: wait-bookkeeper-ready
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        command: ["sh", "-c"]
-        args:
-          - >-
-            bin/apply-config-from-env.py conf/bookkeeper.conf &&
-            until bin/bookkeeper shell simpletest -ensemble {{$ensembleSize}}; do
-              sleep 3;
-            done;
+      # - name: wait-bookkeeper-ready
+      #   image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+      #   imagePullPolicy: {{ .Values.image.pullPolicy }}
+      #   command: ["sh", "-c"]
+      #   args:
+      #     - >-
+      #       bin/apply-config-from-env.py conf/bookkeeper.conf &&
+      #       until bin/bookkeeper shell simpletest -ensemble {{$ensembleSize}}; do
+      #         sleep 3;
+      #       done;
       containers:
       - name: "{{ template "pulsar.fullname" . }}-{{ .Values.broker.component }}"
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -123,6 +123,4 @@ spec:
             name: "{{ template "pulsar.fullname" . }}-{{ .Values.broker.component }}"
         env:
         - name: advertisedAddress
-          valueFrom:
-            fieldRef:
-              fieldPath: status.podIP
+          value: "{{ template "pulsar.fullname" . }}-{{ .Values.broker.component }}"

@@ -33,15 +33,15 @@ spec:
   template:
     spec:
       initContainers:
-      - name: wait-zookeeper-ready
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        command: ["sh", "-c"]
-        args:
-          - >-
-            until nslookup {{ template "pulsar.fullname" . }}-{{ .Values.zookeeper.component }}-{{ add (.Values.zookeeper.replicaCount | int) -1 }}.{{ template "pulsar.fullname" . }}-{{ .Values.zookeeper.component }}.{{ .Values.namespace }}; do
-              sleep 3;
-            done;
+       - name: wait-zookeeper-ready
+         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+         imagePullPolicy: {{ .Values.image.pullPolicy }}
+         command: ["sh", "-c"]
+         args:
+           - >-
+             until nslookup {{ template "pulsar.fullname" . }}-{{ .Values.zookeeper.component }}-{{ add (.Values.zookeeper.replicaCount | int) -1 }}.{{ template "pulsar.fullname" . }}-{{ .Values.zookeeper.component }}-headless.{{ .Values.namespace }}; do
+               sleep 3;
+             done;
       containers:
       - name: "{{ template "pulsar.fullname" . }}-{{ .Values.zookeeperMetadata.component }}"
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

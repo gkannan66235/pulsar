@@ -53,7 +53,7 @@ extra:
 ## Which pulsar image to use
 image:
   repository: apachepulsar/pulsar-all
-  tag: latest
+  tag: 2.5.0
   pullPolicy: IfNotPresent
 
 ## Pulsar: Zookeeper cluster
@@ -76,8 +76,8 @@ zookeeper:
   gracePeriod: 0
   resources:
     requests:
-      memory: 5Gi
-      cpu: 1
+      memory: 1Gi
+      cpu: 500Mi
   volumes:
     data:
       name: data
@@ -139,7 +139,7 @@ zookeeperMetadata:
 ##
 bookkeeper:
   component: bookkeeper
-  replicaCount: 3
+  replicaCount: 2
   updateStrategy:
     type: OnDelete
   podManagementPolicy: OrderedReady
@@ -152,8 +152,8 @@ bookkeeper:
   gracePeriod: 0
   resources:
     requests:
-      memory: 5Gi
-      cpu: 1
+      memory: 2Gi
+      cpu: 500Mi
   volumes:
     journal:
       name: journal
@@ -187,7 +187,7 @@ bookkeeper:
   ## templates/bookkeeper-configmap.yaml
   ##
   configData:
-    PULSAR_MEM: "\"-Xms5g -Xmx5g -XX:MaxDirectMemorySize=5g -Dio.netty.leakDetectionLevel=disabled -Dio.netty.recycler.linkCapacity=1024 -XX:+UseG1GC -XX:MaxGCPauseMillis=10 -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:ParallelGCThreads=32 -XX:ConcGCThreads=32 -XX:G1NewSizePercent=50 -XX:+DisableExplicitGC -XX:-ResizePLAB -XX:+ExitOnOutOfMemoryError -XX:+PerfDisableSharedMem -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCApplicationStoppedTime -XX:+PrintHeapAtGC -verbosegc -XX:G1LogLevel=finest\""
+    PULSAR_MEM: "\"-Xms2g -Xmx2g -XX:MaxDirectMemorySize=2g -Dio.netty.leakDetectionLevel=disabled -Dio.netty.recycler.linkCapacity=1024 -XX:+UseG1GC -XX:MaxGCPauseMillis=10 -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:ParallelGCThreads=32 -XX:ConcGCThreads=32 -XX:G1NewSizePercent=50 -XX:+DisableExplicitGC -XX:-ResizePLAB -XX:+ExitOnOutOfMemoryError -XX:+PerfDisableSharedMem -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCApplicationStoppedTime -XX:+PrintHeapAtGC -verbosegc -XX:G1LogLevel=finest\""
     PULSAR_PREFIX_dbStorage_writeCacheMaxSizeMb: "2048"
     PULSAR_PREFIX_dbStorage_readAheadCacheMaxSizeMb: "2048"
     PULSAR_PREFIX_dbStorage_rocksDB_blockCacheSize: "268435456"
@@ -221,7 +221,7 @@ bookkeeper:
 ##
 broker:
   component: broker
-  replicaCount: 0
+  replicaCount: 3
   # nodeSelector:
     # cloud.google.com/gke-nodepool: default-pool
   annotations:
@@ -248,6 +248,13 @@ broker:
   ## templates/broker-service.yaml
   ##
   service:
+    annotations: {}
+    ports:
+    - name: http
+      port: 8080
+    - name: pulsar
+      port: 6650
+  headlessService:
     annotations: {}
     ports:
     - name: http

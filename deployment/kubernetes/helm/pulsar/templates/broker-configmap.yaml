@@ -31,11 +31,9 @@ metadata:
     cluster: {{ template "pulsar.fullname" . }}
 data:
   zookeeperServers:
-    {{- $global := . }}
-    {{ range $i, $e := until (.Values.zookeeper.replicaCount | int) }}{{ if ne $i 0 }},{{ end }}{{ template "pulsar.fullname" $global }}-{{ $global.Values.zookeeper.component }}-{{ printf "%d" $i }}.{{ template "pulsar.fullname" $global }}-{{ $global.Values.zookeeper.component }}{{ end }}
+    "{{ template "pulsar.fullname" . }}-{{ .Values.zookeeper.component }}"
   configurationStoreServers:
-    {{- $global := . }}
-    {{ range $i, $e := until (.Values.zookeeper.replicaCount | int) }}{{ if ne $i 0 }},{{ end }}{{ template "pulsar.fullname" $global }}-{{ $global.Values.zookeeper.component }}-{{ printf "%d" $i }}.{{ template "pulsar.fullname" $global }}-{{ $global.Values.zookeeper.component }}{{ end }}
+    "{{ template "pulsar.fullname" . }}-{{ .Values.zookeeper.component }}"
   clusterName: {{ template "pulsar.fullname" . }}
   functionsWorkerEnabled: "true"
   PF_pulsarFunctionsCluster: {{ template "pulsar.fullname" . }}
