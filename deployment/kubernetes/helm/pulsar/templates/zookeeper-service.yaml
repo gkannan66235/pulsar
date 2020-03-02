@@ -34,6 +34,29 @@ metadata:
 spec:
   ports:
 {{ toYaml .Values.zookeeper.service.ports | indent 2 }}
+  type: ClusterIP
+  selector:
+    app: {{ template "pulsar.name" . }}
+    release: {{ .Release.Name }}
+    component: {{ .Values.zookeeper.component }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ template "pulsar.fullname" . }}-{{ .Values.zookeeper.component }}-headless"
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ template "pulsar.name" . }}
+    chart: {{ template "pulsar.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: {{ .Values.zookeeper.component }}
+    cluster: {{ template "pulsar.fullname" . }}
+  annotations:
+{{ toYaml .Values.zookeeper.headlessService.annotations | indent 4 }}
+spec:
+  ports:
+{{ toYaml .Values.zookeeper.headlessService.ports | indent 2 }}
   clusterIP: None
   selector:
     app: {{ template "pulsar.name" . }}

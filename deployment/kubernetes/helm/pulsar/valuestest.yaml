@@ -18,7 +18,7 @@
 #
 
 ## Namespace to deploy pulsar
-namespace: pulsar
+namespace: pulsaristio
 namespaceCreate: no
 
 ## If persistence is enabled, components that have state will
@@ -104,6 +104,12 @@ zookeeper:
     annotations:
       service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
     ports:
+    - name: stats
+      port: 2181
+  headlessService:
+    annotations:
+      service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+    ports:
     - name: server
       port: 2888
     - name: leader-election
@@ -131,7 +137,7 @@ zookeeperMetadata:
 ##
 bookkeeper:
   component: bookkeeper
-  replicaCount: 3
+  replicaCount: 0
   updateStrategy:
     type: OnDelete
   podManagementPolicy: OrderedReady
