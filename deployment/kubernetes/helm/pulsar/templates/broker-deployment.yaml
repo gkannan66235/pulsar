@@ -74,7 +74,8 @@ spec:
                 - {{ .Values.broker.component }}
             topologyKey: "kubernetes.io/hostname"
       terminationGracePeriodSeconds: {{ .Values.broker.gracePeriod }}
-      initContainers:
+      subdomain: "{{ template "pulsar.fullname" . }}-{{ .Values.broker.component }}-headless"
+      #initContainers:
       # This init container will wait for zookeeper to be ready before
       # deploying the bookies
       # - name: wait-zookeeper-ready
@@ -111,7 +112,7 @@ spec:
         - >
           bin/apply-config-from-env.py conf/broker.conf &&
           bin/apply-config-from-env.py conf/pulsar_env.sh &&
-          bin/gen-yml-from-env.py conf/functions_worker.yml &&
+          bin/gen-yml-from-env.py conf/functions_worker.yml &&          
           bin/pulsar broker
         ports:
         - name: http

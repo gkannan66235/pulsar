@@ -1,0 +1,55 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: pulsaristio-broker-0
+  namespace: pulsaristio
+spec:
+  hosts:
+  - pulsaristio-broker-0.pulsaristio-broker-headless.pulsaristio.svc.cluster.local
+  location: MESH_INTERNAL
+  ports:
+  - name: server
+    number: 2888
+    protocol: TCP
+  - name: leader-election
+    number: 3888
+    protocol: TCP
+  resolution: DNS
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: pulsaristio-broker-1
+  namespace: pulsaristio
+spec:
+  hosts:
+  - pulsaristio-broker-1.pulsaristio-broker-headless.pulsaristio.svc.cluster.local
+  location: MESH_INTERNAL
+  ports:
+  - name: server
+    number: 2888
+    protocol: TCP
+  - name: leader-election
+    number: 3888
+    protocol: TCP
+  resolution: DNS
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: pulsaristio-broker-2
+  namespace: pulsaristio
+spec:
+  hosts:
+  - pulsaristio-broker-2.pulsaristio-broker-headless.pulsaristio.svc.cluster.local
+  location: MESH_INTERNAL
+  ports:
+  - name: server
+    number: 2888
+    protocol: TCP
+  - name: leader-election
+    number: 3888
+    protocol: TCP
+  resolution: DNS

@@ -46,7 +46,7 @@ extra:
   # pulsar manager
   pulsar_manager: no
   # Bastion pod for administrative commands
-  bastion: no
+  bastion: yes
   # Monitoring stack (prometheus and grafana)
   monitoring: no
 
@@ -76,8 +76,8 @@ zookeeper:
   gracePeriod: 0
   resources:
     requests:
-      memory: 1Gi
-      cpu: 500Mi
+      memory: 2Gi
+      cpu: 0.5
   volumes:
     data:
       name: data
@@ -97,7 +97,7 @@ zookeeper:
   ## templates/zookeeper-configmap.yaml
   ##
   configData:
-    PULSAR_MEM: "\"-Xms5g -Xmx5g -Dcom.sun.management.jmxremote -Djute.maxbuffer=10485760 -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:+DisableExplicitGC -XX:+PerfDisableSharedMem -Dzookeeper.forceSync=no\""
+    PULSAR_MEM: "\"-Xms2g -Xmx2g -Dcom.sun.management.jmxremote -Djute.maxbuffer=10485760 -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:+DisableExplicitGC -XX:+PerfDisableSharedMem -Dzookeeper.forceSync=no\""
     PULSAR_GC: "\"-XX:+UseG1GC -XX:MaxGCPauseMillis=10\""
   ## Zookeeper service
   ## templates/zookeeper-service.yaml
@@ -139,7 +139,7 @@ zookeeperMetadata:
 ##
 bookkeeper:
   component: bookkeeper
-  replicaCount: 2
+  replicaCount: 3
   updateStrategy:
     type: OnDelete
   podManagementPolicy: OrderedReady
@@ -153,7 +153,7 @@ bookkeeper:
   resources:
     requests:
       memory: 2Gi
-      cpu: 500Mi
+      cpu: 0.5
   volumes:
     journal:
       name: journal
@@ -193,7 +193,7 @@ bookkeeper:
     PULSAR_PREFIX_dbStorage_rocksDB_blockCacheSize: "268435456"
     PULSAR_PREFIX_journalMaxSizeMB: "2048"
     PULSAR_PREFIX_statsProviderClass: org.apache.bookkeeper.stats.prometheus.PrometheusMetricsProvider
-    PULSAR_PREFIX_useHostNameAsBookieID: "true"
+    useHostNameAsBookieID: "true"
   ## Bookkeeper configmap
   ## templates/bookkeeper-service.yaml
   ##
@@ -213,7 +213,7 @@ bookkeeper:
   ## templates/bookkeeper-pdb.yaml
   ##
   pdb:
-    usePolicy: yes
+    usePolicy: yes    
     maxUnavailable: 1
 
 ## Pulsar: Broker cluster
@@ -221,7 +221,7 @@ bookkeeper:
 ##
 broker:
   component: broker
-  replicaCount: 3
+  replicaCount: 1
   # nodeSelector:
     # cloud.google.com/gke-nodepool: default-pool
   annotations:
@@ -231,13 +231,13 @@ broker:
   gracePeriod: 0
   resources:
     requests:
-      memory: 15Gi
-      cpu: 4
+      memory: 2Gi
+      cpu: 0.5
   ## Broker configmap
   ## templates/broker-configmap.yaml
   ##
   configData:
-    PULSAR_MEM: "\"-Xms15g -Xmx15g -XX:MaxDirectMemorySize=15g -Dio.netty.leakDetectionLevel=disabled -Dio.netty.recycler.linkCapacity=1024 -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:ParallelGCThreads=32 -XX:ConcGCThreads=32 -XX:G1NewSizePercent=50 -XX:+DisableExplicitGC -XX:-ResizePLAB -XX:+ExitOnOutOfMemoryError -XX:+PerfDisableSharedMem\""
+    PULSAR_MEM: "\"-Xms2g -Xmx2g -XX:MaxDirectMemorySize=2g -Dio.netty.leakDetectionLevel=disabled -Dio.netty.recycler.linkCapacity=1024 -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:ParallelGCThreads=32 -XX:ConcGCThreads=32 -XX:G1NewSizePercent=50 -XX:+DisableExplicitGC -XX:-ResizePLAB -XX:+ExitOnOutOfMemoryError -XX:+PerfDisableSharedMem\""
     PULSAR_GC: "\"-XX:+UseG1GC -XX:MaxGCPauseMillis=10\""
     PULSAR_PREFIX_managedLedgerDefaultEnsembleSize: "3"
     PULSAR_PREFIX_managedLedgerDefaultWriteQuorum: "3"
@@ -251,14 +251,14 @@ broker:
     annotations: {}
     ports:
     - name: http
-      port: 8080
+      port: 9080
     - name: pulsar
       port: 6650
   headlessService:
     annotations: {}
     ports:
     - name: http
-      port: 8080
+      port: 9080
     - name: pulsar
       port: 6650
   ## Broker PodDisruptionBudget
@@ -283,13 +283,13 @@ proxy:
   gracePeriod: 0
   resources:
     requests:
-      memory: 4Gi
-      cpu: 1
+      memory: 1Gi
+      cpu: 0.5
   ## Proxy configmap
   ## templates/proxy-configmap.yaml
   ##
   configData:
-    PULSAR_MEM: "\"-Xms4g -Xmx4g -XX:MaxDirectMemorySize=4g\""
+    PULSAR_MEM: "\"-Xms1g -Xmx1g -XX:MaxDirectMemorySize=4g\""
   ## Proxy service
   ## templates/proxy-service.yaml
   ##
@@ -381,7 +381,7 @@ dashboard:
 ##
 bastion:
   component: bastion
-  replicaCount: 0
+  replicaCount: 1
   # nodeSelector:
     # cloud.google.com/gke-nodepool: default-pool
   annotations: {}

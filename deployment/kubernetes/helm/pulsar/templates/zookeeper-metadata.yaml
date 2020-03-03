@@ -57,6 +57,6 @@ spec:
               --cluster {{ template "pulsar.fullname" . }} \
               --zookeeper {{ template "pulsar.fullname" . }}-{{ .Values.zookeeper.component }} \
               --configuration-store {{ template "pulsar.fullname" . }}-{{ .Values.zookeeper.component }} \
-              --web-service-url http://{{ template "pulsar.fullname" . }}-{{ .Values.broker.component }}.{{ .Values.namespace }}.svc.cluster.local:8080/ \
+              --web-service-url http://{{ template "pulsar.fullname" . }}-{{ .Values.broker.component }}.{{ .Values.namespace }}.svc.cluster.local:9080/ \
               --broker-service-url pulsar://{{ template "pulsar.fullname" . }}-{{ .Values.broker.component }}.{{ .Values.namespace }}.svc.cluster.local:6650/ || true;
       restartPolicy: Never
