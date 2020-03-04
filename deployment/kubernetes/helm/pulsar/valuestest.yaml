@@ -251,14 +251,14 @@ broker:
     annotations: {}
     ports:
     - name: http
-      port: 9080
+      port: 8080
     - name: pulsar
       port: 6650
   headlessService:
     annotations: {}
     ports:
     - name: http
-      port: 9080
+      port: 8080
     - name: pulsar
       port: 6650
   ## Broker PodDisruptionBudget
