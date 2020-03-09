@@ -4,15 +4,16 @@ metadata:
   name: pulsaristio-broker
   namespace: pulsaristio
 spec:
-  addresses:
-  - 10.240.0.72
   hosts:
-  - 10.240.0.72
+  - "*.pulsaristio-broker-headless.pulsaristio.svc.cluster.local"
   location: MESH_INTERNAL
   ports:
   - name: http
     number: 8080
     protocol: HTTP
+  - name: pulsar
+    number: 6650
+    protocol: TCP
   resolution: NONE
 ---
 apiVersion: "networking.istio.io/v1alpha3"
@@ -20,7 +21,7 @@ kind: "DestinationRule"
 metadata:
   name: pulsaristio-broker
 spec:
-  host: "10.240.0.72"
+  host: "*.pulsaristio-broker-headless.pulsaristio.svc.cluster.local"
   trafficPolicy:
     tls:
       mode: ISTIO_MUTUAL
