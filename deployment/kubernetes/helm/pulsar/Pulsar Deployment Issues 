@@ -1,0 +1,12 @@
+Pulsar Deployment issues & notes:
+
+1. Zookeeper leader election required excluding ports 2888,3888  -- solved by upgrading to istio 1.5.2 beta
+2. Args "quorumListenOnAllIPs=true" added into zookeeper runtime.
+3. Zookeeper also exposed via k8s service to bookkeeper & broker.
+4. Need to advertise bookkeeper fqdn hostname to work with mTLS. -- make sure "PULSAR_PREFIX_useHostNameAsBookieID: "true" in values.yaml  
+5. By advertising broker service name, new brokers are not able to create session with zookeeper
+6. Zookeeper session not ending if broker restarted
+7. POD's in broker deployment set by default not added into KubeDNS which required by mTLS - https://github.com/kubernetes/kubernetes/issues/60789
+8. So, brokers converted as K8s Statefulset(Headless Service)
+9. Headless service with Istio 1.4.2 having problem of handshaking with same POD - https://github.com/istio/istio/issues/12551
+10. Upgrading to Istio 1.5.2 beta solved the handshaking problem.
