@@ -36,7 +36,7 @@ prometheus_rbac: yes
 ## which extra components to deploy
 extra:
   # Pulsar proxy
-  proxy: no
+  proxy: yes
   # Bookkeeper auto-recovery
   autoRecovery: no
   # Pulsar dashboard
@@ -279,7 +279,7 @@ broker:
 ##
 proxy:
   component: proxy
-  replicaCount: 0
+  replicaCount: 2
   # nodeSelector:
     # cloud.google.com/gke-nodepool: default-pool
   annotations:
@@ -301,15 +301,16 @@ proxy:
   ##
   service:
     annotations: {}
-    type: NodePort
+    type: LoadBalancer
     ports:
-    - name: http
-      port: 8080
-      nodePort: 30001
-      protocol: TCP
+    # - name: http
+    #   port: 8089
+    #   targetPort: 8080
+    #   # nodePort: 30001
+    #   protocol: TCP
     - name: tcp
       port: 6650
-      nodePort: 30002
+      # nodePort: 30002
       protocol: TCP
   ## Proxy PodDisruptionBudget
   ## templates/proxy-pdb.yaml
