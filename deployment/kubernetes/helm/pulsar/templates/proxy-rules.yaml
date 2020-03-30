@@ -1,7 +1,7 @@
 apiVersion: "security.istio.io/v1beta1"
 kind: "PeerAuthentication"
 metadata:
-  name: "policy-proxy"
+  name: "policy-pulsar"
   namespace: "pulsaristio"
 spec:
   selector:
@@ -12,14 +12,20 @@ spec:
   mtls:
     mode: PERMISSIVE
 
-# ---
-# apiVersion: "networking.istio.io/v1alpha3"
-# kind: "DestinationRule"
-# metadata:
-#   name: "rule-proxy"
-#   namespace: "pulsaristio"
-# spec:
-#   host: pulsaristio-proxy.pulsaristio.svc.cluster.local
-#   trafficPolicy:
-#     tls:
-#       mode: SIMPLE
+---
+apiVersion: "security.istio.io/v1beta1"
+kind: "PeerAuthentication"
+metadata:
+  name: "policy-pulsar-admin"
+  namespace: "pulsaristio"
+spec:
+  selector:
+    matchLabels:
+      app: pulsar
+      component: broker
+      release: pulsaristio
+  mtls:
+    mode: UNSET
+  portLevelMtls:
+    8080:
+      mode: PERMISSIVE

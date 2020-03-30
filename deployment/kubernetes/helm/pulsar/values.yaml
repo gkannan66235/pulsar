@@ -255,11 +255,17 @@ broker:
   ##
   service:
     annotations: {}
+    type: ClusterIP
+    ports:
+    - name: pulsar
+      port: 6650
+  adminService:
+    annotations: {}
+    type: LoadBalancer
     ports:
     - name: http
       port: 8080
-    - name: pulsar
-      port: 6650
+      targetPort: 8080
   headlessService:
     annotations: {}
     ports:
