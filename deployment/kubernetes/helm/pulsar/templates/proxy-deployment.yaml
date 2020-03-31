@@ -74,18 +74,18 @@ spec:
                 - {{ .Values.proxy.component }}
             topologyKey: "kubernetes.io/hostname"
       terminationGracePeriodSeconds: {{ .Values.proxy.gracePeriod }}
-      # initContainers:
-      # # This init container will wait for zookeeper to be ready before
-      # # deploying the bookies
-      # - name: wait-zookeeper-ready
-      #   image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-      #   imagePullPolicy: {{ .Values.image.pullPolicy }}
-      #   command: ["sh", "-c"]
-      #   args:
-      #     - >-
-      #       until bin/pulsar zookeeper-shell -server {{ template "pulsar.fullname" . }}-{{ .Values.zookeeper.component }} ls /admin/clusters/{{ template "pulsar.fullname" . }}; do
-      #         sleep 3;
-      #       done;
+      initContainers:
+      # This init container will wait for zookeeper to be ready before
+      # deploying the bookies
+      - name: wait-broker-ready
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["sh", "-c"]
+        args:
+          - >-
+            until nslookup {{ template "pulsar.fullname" . }}-{{ .Values.broker.component }}-{{ add (.Values.broker.replicaCount | int) -1 }}.{{ template "pulsar.fullname" . }}-{{ .Values.broker.component }}-headless.{{ .Values.namespace }}; do
+              sleep 3;
+            done;
       containers:
       - name: "{{ template "pulsar.fullname" . }}-{{ .Values.proxy.component }}"
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
