@@ -9,4 +9,9 @@ Pulsar Deployment issues & notes:
 7. POD's in broker deployment set by default not added into KubeDNS which required by mTLS - https://github.com/kubernetes/kubernetes/issues/60789
 8. So, brokers converted as K8s Statefulset(Headless Service)
 9. Headless service with Istio 1.4.2 having problem of handshaking with same POD - https://github.com/istio/istio/issues/12551
-10. Upgrading to Istio 1.5.2 beta solved the handshaking problem.
+10. Upgrading to Istio 1.5 solved the handshaking problem.
+
+Verify MTLS:
+kubectl get meshpolicies default -o yaml
+istioctl exp describe pod pulsaristio-bookkeeper-0.pulsaristio
+istioctl authn tls-check pulsaristio-broker-0.pulsaristio  pulsaristio-broker.pulsaristio.svc.cluster.local
