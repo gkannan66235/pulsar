@@ -16,7 +16,16 @@ kubectl get meshpolicies default -o yaml
 istioctl exp describe pod pulsaristio-bookkeeper-0.pulsaristio
 istioctl authn tls-check pulsaristio-broker-0.pulsaristio  pulsaristio-broker.pulsaristio.svc.cluster.local
 
-## Remove sidecar
+## Remove sidecar and Test mTLS
 kubectl get deployment pulsaristio-bastion -n pulsaristio -o yaml | istioctl experimental kube-uninject -f - | kubectl apply -f -
-kubectl get deployment pulsaristio-proxy -n pulsaristio -o yaml | istioctl experimental kube-uninject -f - | kubectl apply -f -
 bin/pulsar-client --url pulsar://pulsaristio-broker:6650 produce topic -m "hi"
+bin/pulsar-admin --admin-url http://pulsaristio-broker-admin:8080 tenants list
+bin/pulsar zookeeper-shell -server pulsaristio-zookeeper:2181
+
+bin/pulsar-client --url pulsar://pulsaristio-proxy:6650 produce topic -m "hi"
+
+kubectl get deployment pulsaristio-bastion -n pulsaristio -o yaml | istioctl kube-inject -f - | kubectl apply -f -
+bin/pulsar-client --url pulsar://pulsaristio-broker:6650 produce topic -m "hi"
+bin/pulsar-admin --admin-url http://pulsaristio-broker-admin:8080 tenants list
+bin/pulsar zookeeper-shell -server pulsaristio-zookeeper:2181
+

@@ -10,7 +10,10 @@ spec:
       component: proxy
       release: pulsaristio
   mtls:
-    mode: PERMISSIVE
+    mode: STRICT
+  portLevelMtls:
+    6650:
+      mode: PERMISSIVE
 
 ---
 apiVersion: "security.istio.io/v1beta1"
@@ -25,7 +28,7 @@ spec:
       component: broker
       release: pulsaristio
   mtls:
-    mode: UNSET
+    mode: STRICT
   portLevelMtls:
     8080:
       mode: PERMISSIVE
