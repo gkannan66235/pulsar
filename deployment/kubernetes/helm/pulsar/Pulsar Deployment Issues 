@@ -15,3 +15,8 @@ Verify MTLS:
 kubectl get meshpolicies default -o yaml
 istioctl exp describe pod pulsaristio-bookkeeper-0.pulsaristio
 istioctl authn tls-check pulsaristio-broker-0.pulsaristio  pulsaristio-broker.pulsaristio.svc.cluster.local
+
+## Remove sidecar
+kubectl get deployment pulsaristio-bastion -n pulsaristio -o yaml | istioctl experimental kube-uninject -f - | kubectl apply -f -
+kubectl get deployment pulsaristio-proxy -n pulsaristio -o yaml | istioctl experimental kube-uninject -f - | kubectl apply -f -
+bin/pulsar-client --url pulsar://pulsaristio-broker:6650 produce topic -m "hi"
